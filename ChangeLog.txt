@@ -6,3 +6,6 @@
 Victor -- 28 Julio 2016
 
 	Añadido gitHub
+
+Guille -- 28 Julio 2016
+	Añadido a Github
