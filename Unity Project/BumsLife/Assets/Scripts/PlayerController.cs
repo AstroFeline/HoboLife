@@ -3,10 +3,12 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour{
     public float moveSpeed;
+    private bool isMoving=true;
     void Start() { }
 
     void FixedUpdate(){
-        Move();
+
+        if (IsMoving1) Move();
     }
 
     void Move(){
@@ -19,6 +21,19 @@ public class PlayerController : MonoBehaviour{
             transform.Translate(new Vector3(0f, yMove*moveSpeed * Time.deltaTime, 0f));
         }
 
+    }
+    
+    public bool IsMoving1
+    {
+        get
+        {
+            return isMoving;
+        }
+
+        set
+        {
+            isMoving = value;
+        }
     }
 }
 
