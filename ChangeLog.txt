@@ -10,3 +10,8 @@ Victor -- 28 Julio 2016
 Guille -- 28 Julio 2016
 	Github en pc de casa 10/08/2016
 	Añadido a Github
+
+James -- 23 de Agosto 2016.
+	Añadido Player Controller y Camera Controller. 
+	24 de Agosto 2016
+	Añadida función Flip() en el Player Controller. 
