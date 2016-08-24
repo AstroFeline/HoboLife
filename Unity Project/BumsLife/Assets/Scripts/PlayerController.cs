@@ -4,7 +4,7 @@ using System.Collections;
 public class PlayerController : MonoBehaviour{
     public float moveSpeed;
     private bool facingRight;
-    private bool isMoving=true;
+    private bool isMovingL=true, isMovingR = true, isMovingU = true, isMovingD = true;
     private Animator anim;
 
     void Start() {
@@ -17,34 +17,56 @@ public class PlayerController : MonoBehaviour{
 
     void FixedUpdate(){
         float xMove = Input.GetAxisRaw("Horizontal");
-        if (IsMoving1) {
-            Move();
-            Flip(xMove);
-        } 
+       
+        Move();
+        Flip(xMove);
+        
 
     }
 
-    void Move(){
+    void Move() {
         this.moveSpeed = 1;
         float xMove = Input.GetAxisRaw("Horizontal");
         float yMove = Input.GetAxisRaw("Vertical");
 
+        if ((xMove > 0f || xMove < 0f) || (yMove > 0f || yMove < 0f)) { 
+            if (isMovingR)
+            {
+                if (xMove > 0f)
+                {
+                    moveSpeed = 1;
+                    transform.Translate(new Vector3(xMove * moveSpeed * Time.deltaTime, 0f, 0f));
 
-        if (xMove > 0f ){
-            moveSpeed = 1;
-            transform.Translate(new Vector3(xMove * moveSpeed*Time.deltaTime,0f,0f));
-            
-        }else if(xMove < 0f){
-            moveSpeed = 1;
-            transform.Translate(new Vector3(-(xMove * moveSpeed * Time.deltaTime), 0f, 0f));
-            transform.localScale = new Vector3(-1f, 1f, 1f);
-        }
-        else if (yMove > 0f || yMove < 0f){
-            moveSpeed = 1;
-            transform.Translate(new Vector3(0f, yMove*moveSpeed * Time.deltaTime, 0f));
-        }
-        else
-        {
+                }
+            }
+            if (isMovingL)
+            {
+                if (xMove < 0f)
+                {
+                    moveSpeed = 1;
+                    transform.Translate(new Vector3(-(xMove * moveSpeed * Time.deltaTime), 0f, 0f));
+                    transform.localScale = new Vector3(-1f, 1f, 1f);
+                }
+            }
+            if (isMovingU)
+            {
+                if (yMove > 0f)
+                {
+                    moveSpeed = 1;
+                    transform.Translate(new Vector3(0f, yMove * moveSpeed * Time.deltaTime, 0f));
+
+                }
+            }
+            if (isMovingD)
+            {
+                if (yMove < 0f)
+                {
+                    moveSpeed = 1;
+                    transform.Translate(new Vector3(0f, yMove * moveSpeed * Time.deltaTime, 0f));
+                }
+
+            }
+        }else{
             moveSpeed = 0;
         }
 
@@ -52,19 +74,6 @@ public class PlayerController : MonoBehaviour{
 
     }
     
-    public bool IsMoving1
-    {
-        get
-        {
-            return isMoving;
-        }
-
-        set
-        {
-            isMoving = value;
-        }
-    }
-
     public void Flip(float xMove)
     {
         if (xMove > 0 && !facingRight || xMove < 0 && facingRight)
@@ -75,5 +84,59 @@ public class PlayerController : MonoBehaviour{
             transform.localScale = theScale;
         }
     }
+
+
+    public bool IsMovingR
+    {
+        get
+        {
+            return isMovingR;
+        }
+
+        set
+        {
+            isMovingR = value;
+        }
+    }
+
+    public bool IsMovingL
+    {
+        get
+        {
+            return isMovingL;
+        }
+
+        set
+        {
+            isMovingL = value;
+        }
+    }
+
+    public bool IsMovingU
+    {
+        get
+        {
+            return isMovingU;
+        }
+
+        set
+        {
+            isMovingU = value;
+        }
+    }
+
+    public bool IsMovingD
+    {
+        get
+        {
+            return isMovingD;
+        }
+
+        set
+        {
+            isMovingD = value;
+        }
+    }
+
 }
 
