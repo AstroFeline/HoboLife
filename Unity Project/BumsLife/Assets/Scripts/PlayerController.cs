@@ -45,7 +45,6 @@ public class PlayerController : MonoBehaviour{
                 {
                     moveSpeed = 1;
                     transform.Translate(new Vector3(-(xMove * moveSpeed * Time.deltaTime), 0f, 0f));
-                    transform.localScale = new Vector3(-1f, 1f, 1f);
                 }
             }
             if (isMovingU)
