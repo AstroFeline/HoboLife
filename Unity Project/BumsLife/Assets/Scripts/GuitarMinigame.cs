@@ -21,7 +21,10 @@ public class GuitarMinigame : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Keypad0))
         {
             isGuitarOn = !isGuitarOn;
-            print("guitarra " + isGuitarOn);
+            GetComponent<PlayerController>().IsMovingD = false;
+            GetComponent<PlayerController>().IsMovingU = false;
+            GetComponent<PlayerController>().IsMovingL = false;
+            GetComponent<PlayerController>().IsMovingR = false;
         }
         anim.SetBool("guitarOn", isGuitarOn);
     }
