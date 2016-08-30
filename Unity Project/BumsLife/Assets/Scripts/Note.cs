@@ -6,6 +6,7 @@ class Note {
 	private GameObject goNote;
 	private Vector3 positionInit;
 	private float speed;
+  
 
 	public Note(GameObject no, Vector3 pos, float sp){
 		goNote = no;
@@ -14,7 +15,13 @@ class Note {
 	}
 
 	public void Move(){
-		goNote.transform.Translate(Vector3.down * Time.deltaTime * Speed);
+        Debug.Log("is moving "+goNote.name);
+        goNote.transform.Translate(Vector3.down * Time.deltaTime * Speed);
+        if (goNote.transform.position.y <= 0.32)
+        {
+           goNote.GetComponent<SpriteRenderer>().sprite = Resources.Load("NotaBrillo") as Sprite;
+           Debug.Log("is shining " + goNote.name);
+        }
 	}
 
 	public GameObject GoNote{

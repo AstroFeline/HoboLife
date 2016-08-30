@@ -35,23 +35,32 @@ public class GuitarMinigame : MonoBehaviour {
 
 		if (Camera.main.orthographicSize <= 1) {
 			guide.SetActive (true);
-		} else {
+            int indexPosition = Random.Range(1, 5);
+            float positionX = 0;
+            switch (indexPosition)
+            {
+                case 1:
+                    positionX = 0.48f;
+                    break;
+                case 2:
+                    positionX = 0.64f;
+                    break;
+                case 3:
+                    positionX = 0.8f;
+                    break;
+                case 4:
+                    positionX = 0.96f;
+                    break;
+            }
+            Note no = new Note(goNote, new Vector3(positionX, 1.07f, 0), 2);
+            no.Move();
+            //y arriba= 1.07, y abajo= 0.32
+            //Note no = new Note (goNote,4, 6.3f);
+        }
+        else {
 			guide.SetActive (false);
 		}
-		int indexPosition = Random.Range (1, 5);
-		float position;
-		switch (indexPosition) {
-			case 1: position=0.48f;
-				break;
-			case 2: position=0.64f;
-				break;
-			case 3: position=0.8f;
-				break;
-			case 4: position=0.96f;
-				break;
-		}
-
-		//Note no = new Note (goNote,4, 6.3f);
+		
 
     }
 }
