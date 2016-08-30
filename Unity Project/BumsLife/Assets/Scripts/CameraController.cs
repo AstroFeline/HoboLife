@@ -7,9 +7,13 @@ public class CameraController : MonoBehaviour {
     public GameObject target;
     public float distance;
     private bool isTarget;
-    
+	private float camOrthographic;
+	private Vector3 camInitPosition;
 	
-	// Update is called once per frame
+	void Start(){
+		camOrthographic = Camera.main.orthographicSize;
+		camInitPosition = transform.position;
+	}
 	void Update () {
 
         if (IsTarget)
@@ -18,22 +22,32 @@ public class CameraController : MonoBehaviour {
         //PRUEBA, SE ELIMINARA
         if (Input.GetKeyDown(KeyCode.Keypad0))
         {
-            isZoom = true;
+			isZoom = !isZoom;
+			print ("isZoom=" + isZoom);
         }
         //
-        if (isZoom)
-        {
-            if (Camera.main.orthographicSize > 1)
-            {
-                Zoom();
-            }
-        }
+		if (isZoom) {
+			if (Camera.main.orthographicSize > 1) {
+				ZoomIn ();
+			}
+		} else {
+			if (Camera.main.orthographicSize < camOrthographic) {
+				ZoomOut ();
+			} else {
+				transform.position = camInitPosition + new Vector3 (0, 0, camOrthographic);
+
+			}
+		}
 	}
 
-    private void Zoom(){
+    private void ZoomIn(){
         Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, Camera.main.orthographicSize - 500, Time.deltaTime * 0.7f);
         transform.position = target.transform.position - new Vector3(0, 0, Camera.main.orthographicSize);
     }
+
+	private void ZoomOut(){
+		Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, camOrthographic + 500, Time.deltaTime * 0.7f);
+	}
 
     public bool IsTarget
     {

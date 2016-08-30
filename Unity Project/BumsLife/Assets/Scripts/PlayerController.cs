@@ -75,13 +75,14 @@ public class PlayerController : MonoBehaviour{
     
     public void Flip(float xMove)
     {
-        if (xMove > 0 && !facingRight || xMove < 0 && facingRight)
-        {
-            facingRight = !facingRight;
-            Vector3 theScale = transform.localScale;
-            theScale.x *= -1;
-            transform.localScale = theScale;
-        }
+		if (isMovingL || isMovingR) {
+			if (xMove > 0 && !facingRight || xMove < 0 && facingRight) {
+				facingRight = !facingRight;
+				Vector3 theScale = transform.localScale;
+				theScale.x *= -1;
+				transform.localScale = theScale;
+			}
+		}
     }
 
 
