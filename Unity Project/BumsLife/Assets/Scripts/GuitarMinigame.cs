@@ -9,7 +9,9 @@ public class GuitarMinigame : MonoBehaviour {
 	public GameObject[] guide,guideGood;
 	public GameObject goNote, crap, meh, good;
 	public Sprite noteShine;
+	public AudioClip themeSong;
 
+	private AudioSource audios;
     private Animator anim;
     private bool isGuitarOn;
 	private Collider2D[] guideCol = new Collider2D[4];
@@ -21,6 +23,7 @@ public class GuitarMinigame : MonoBehaviour {
 
     void Start()
     {
+		audios = GetComponent<AudioSource> ();
         anim = GetComponent<Animator>();
 		for (int i = 0; i < guide.Length; i++) {
 			guideCol[i] = guide[i].GetComponent<Collider2D> ();
@@ -58,6 +61,8 @@ public class GuitarMinigame : MonoBehaviour {
 		if (Camera.main.orthographicSize <= 1) {
 			if (isSeconds) {
 				activeSeconds = Time.time;
+				audios.clip = themeSong;
+				audios.Play();
 				isSeconds = false;
 			}
 			guide[0].SetActive (true);
@@ -65,8 +70,8 @@ public class GuitarMinigame : MonoBehaviour {
 			float.TryParse (line[j].ToString(),out seconds);
 
 
-			if (Time.time<=(seconds + totalTime + activeSeconds+0.01f) && Time.time>=(seconds + totalTime + activeSeconds-0.01f) ) {
-				print ("Segundos actuales=" + Time.time + " objetivo=" + (seconds + totalTime+activeSeconds) +" longitud= "+ j);
+			if (Time.time<=((totalTime + activeSeconds+0.01f)-seconds) && Time.time>=((totalTime + activeSeconds-0.01f)-seconds) ) {
+				//print ("Segundos actuales=" + Time.time + " objetivo=" + (seconds + totalTime+activeSeconds) +" longitud= "+ j);
 				if (quantity > 0) {
 		            int indexPosition = Random.Range(1, 5);
 		            float positionX = 0;
@@ -87,7 +92,7 @@ public class GuitarMinigame : MonoBehaviour {
 		            }
 
 
-					float speed = 3;//Random.Range(1,4);
+					float speed = 2;//Random.Range(1,4);
 					GameObject noteClone = (GameObject)Instantiate (goNote, new Vector3 (positionX, 1.07f, 0), Quaternion.identity, GameObject.Find ("Hobo").transform);
 					noteClone.transform.localPosition=new Vector3(positionX,1.07f, 0);
 					StartCoroutine (Moving (noteClone, speed, indexPosition));
@@ -116,8 +121,8 @@ public class GuitarMinigame : MonoBehaviour {
 
 			//Si la nota toca el collider good
 			if (noteCol.IsTouching (guideGoodCol [indexposition - 1])) {
-				print ("GOOOOOOOD");
-				print ("Tiempo tocar" + (indexposition - 1) + "=" + Time.time);
+				
+				//print ("Tiempo tocar" + (indexposition - 1) + "=" + Time.time);
 				int scorePosition = Random.Range (1, 3);
 				bool isgood = false;
 				switch (indexposition) {
@@ -177,7 +182,7 @@ public class GuitarMinigame : MonoBehaviour {
 			} else {
 				//Si la nota toca el collider meh
 				if (noteCol.IsTouching (guideCol [indexposition - 1])) {
-					print ("Tiempo tocar" + (indexposition - 1) + "=" + Time.time);
+					//print ("Tiempo tocar" + (indexposition - 1) + "=" + Time.time);
 					int scorePosition = Random.Range (1, 3);
 					bool ismeh = false;
 					switch (indexposition) {
@@ -261,12 +266,6 @@ public class GuitarMinigame : MonoBehaviour {
 		}
 
 	}
-	private void OnCollisionEnter2D(Collision2D col){
-		print ("funciona");
-		if (col.gameObject.tag == "MehScore") {
-			print("tocadito");
-		}
-	}
 
 	private ArrayList ReadTxt(){
 		StreamReader reader = new StreamReader (Application.dataPath + "/StreamingAssets" + "/" + "Song.txt");
@@ -274,7 +273,6 @@ public class GuitarMinigame : MonoBehaviour {
 		int i = 0;
 		while (!reader.EndOfStream) {
 			line.Add(reader.ReadLine ());
-			print ("linea= " + line [i]);
 			i++;
 		}
 
