@@ -7,6 +7,8 @@ public class NPCController : MonoBehaviour {
     public bool isWalking;
     public float walkTime;
     public float waitTime;
+    public bool canMove;
+    
 
     private float walkCounter;
     private float waitCounter;
@@ -14,18 +16,32 @@ public class NPCController : MonoBehaviour {
     private bool isMovingL = true, isMovingR = true, isMovingU = true, isMovingD = true;
     private Animator anim;
     private bool facingRight;
+    private DialogueManagerController theDM;
 
     // Use this for initialization
     void Start () {
+        theDM = FindObjectOfType<DialogueManagerController>();
         moveSpeed = 0;
         waitCounter = waitTime;
         walkCounter = walkTime;
         anim = this.gameObject.GetComponent<Animator>();
         chooseDirection();
+        canMove = true;
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
+
+        if (!theDM.dialogueActive)
+        {
+            canMove = true;
+        }
+
+        if (!canMove)
+        {
+            moveSpeed = 0;
+            return;
+        }
 	    if (isWalking)
         {
             walkCounter -= Time.deltaTime;

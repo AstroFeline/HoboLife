@@ -2,22 +2,28 @@
 using System.Collections;
 
 public class PlayerController : MonoBehaviour{
+
     public float moveSpeed;
     private bool facingRight;
+    public bool canMove;
+
     private bool isMovingL=true, isMovingR = true, isMovingU = true, isMovingD = true;
     private Animator anim;
 
     void Start() {
         facingRight = true;
         anim = this.gameObject.GetComponent<Animator>();
+        canMove = true;
     }
-
-
-    
 
     void FixedUpdate(){
         float xMove = Input.GetAxisRaw("Horizontal");
-       
+
+        if (!canMove)
+        {
+            moveSpeed = 0;
+            return;
+        }
         Move();
         Flip(xMove);
         
