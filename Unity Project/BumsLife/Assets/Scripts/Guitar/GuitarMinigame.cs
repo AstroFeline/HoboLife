@@ -25,19 +25,32 @@ public class GuitarMinigame : MonoBehaviour {
     {
 		audios = GetComponent<AudioSource> ();
         anim = GetComponent<Animator>();
+
+        //inicializamos los coliders pequeño y grande
 		for (int i = 0; i < guide.Length; i++) {
 			guideCol[i] = guide[i].GetComponent<Collider2D> ();
 			guideGoodCol[i] = guideGood[i].GetComponent<Collider2D> ();
 		}
 
+        //obtenemos las lineas y los segundos leyendo del txt
 		line = ReadTxt ();
 
+        //fijamos la cantidad de notas que van a haber
 		int.TryParse(line[j].ToString(),out quantity);
+        print("cantidad=" + line[j]);
 		j++;
 
 
     }
+    void Update()
+    {
+        //provisional
+        if (Input.GetKeyDown(KeyCode.Keypad0))
+        {
+            isGuitarOn = !isGuitarOn;
 
+        }
+    }
 	void FixedUpdate () {
         PlayGuitar();
 
@@ -45,35 +58,37 @@ public class GuitarMinigame : MonoBehaviour {
 
     private void PlayGuitar()
     {
-		if (Input.GetKeyDown(KeyCode.Keypad0))
-        {
-            isGuitarOn = !isGuitarOn;
-
-		}
+		//Impedimos que le hobo se mueva mientra toca la guitarra
 		if (isGuitarOn) {
 			GetComponent<PlayerController>().IsMovingD = false;
 			GetComponent<PlayerController>().IsMovingU = false;
 			GetComponent<PlayerController>().IsMovingL = false;
 			GetComponent<PlayerController>().IsMovingR = false;
 		}
+        //animacion guitarrista
         anim.SetBool("guitarOn", isGuitarOn);
 
+        //si la camara esta enfocada en el guitarrista
 		if (Camera.main.orthographicSize <= 1) {
+            //tomamos el tiempo de inicio del guitarritas y empieza la cancion
 			if (isSeconds) {
 				activeSeconds = Time.time;
 				audios.clip = themeSong;
 				audios.Play();
 				isSeconds = false;
 			}
+            //Activamos el sprite de las cuerdas y en cada loop del update tomamos los segundos de la cancion
 			guide[0].SetActive (true);
 			float seconds;
 			float.TryParse (line[j].ToString(),out seconds);
 
-
-			if (Time.time<=((totalTime + activeSeconds+0.01f)-seconds) && Time.time>=((totalTime + activeSeconds-0.01f)-seconds) ) {
-				//print ("Segundos actuales=" + Time.time + " objetivo=" + (seconds + totalTime+activeSeconds) +" longitud= "+ j);
+            //Si el tiempo esta entre los segundos iniciales de cada nota, el tiempo desde el inicio de la guitarra y le sumamos el intervalo en el que tarda la nota en llegar al objetivo
+            if (Time.time<=((seconds + activeSeconds+0.01f)+ totalTime) && Time.time>=((seconds  + activeSeconds-0.01f)- totalTime) ) {
+				print ("Segundos actuales=" + Time.time + " objetivo=" + ( (seconds + activeSeconds)-totalTime));
+                //mientras haya notas
 				if (quantity > 0) {
-		            int indexPosition = Random.Range(1, 5);
+                    //Randomizamos la posicion de cada nota
+                    int indexPosition = Random.Range(1, 5);
 		            float positionX = 0;
 		            switch (indexPosition)
 		            {
@@ -92,9 +107,11 @@ public class GuitarMinigame : MonoBehaviour {
 		            }
 
 
-					float speed = 2;//Random.Range(1,4);
+					float speed = 1;//Random.Range(1,4);
+                    //instanciamos cada nota con sus parametros
 					GameObject noteClone = (GameObject)Instantiate (goNote, new Vector3 (positionX, 1.07f, 0), Quaternion.identity, GameObject.Find ("Hobo").transform);
 					noteClone.transform.localPosition=new Vector3(positionX,1.07f, 0);
+                    //Llamamos al movimiento de la nota
 					StartCoroutine (Moving (noteClone, speed, indexPosition));
 
 					if(j<line.Count)j++;
@@ -113,16 +130,13 @@ public class GuitarMinigame : MonoBehaviour {
     }
 
 	private IEnumerator Moving(GameObject noteClone, float speed,int indexposition){
-		
+       
 		while (noteClone.transform.position.y > 0.10f) {
 			
 			noteClone.transform.Translate (Vector3.down * Time.deltaTime/speed);
 			Collider2D noteCol = noteClone.GetComponent<Collider2D> ();
-
-			//Si la nota toca el collider good
+            //Si la nota toca el collider good
 			if (noteCol.IsTouching (guideGoodCol [indexposition - 1])) {
-				
-				//print ("Tiempo tocar" + (indexposition - 1) + "=" + Time.time);
 				int scorePosition = Random.Range (1, 3);
 				bool isgood = false;
 				switch (indexposition) {
@@ -161,28 +175,30 @@ public class GuitarMinigame : MonoBehaviour {
 						good.transform.localPosition = new Vector3 (0.05f, 0.6f, 0f);
 						meh.SetActive (false);
 						good.SetActive (true);
-					}
+                        crap.SetActive(false);
+                        }
 					break;
 				case 2:
 					if (isgood) {
 						good.transform.localPosition = new Vector3 (1.35f, 0.7f, 0f);
 						meh.SetActive (false);
 						good.SetActive (true);
-					}
+                        crap.SetActive(false);
+                        }
 					break;
 				case 3:
 					if (isgood) {
 						good.transform.localPosition = new Vector3 (1f, 0.07f, 0f);
 						meh.SetActive (false);
 						good.SetActive (true);
-					}
+                        crap.SetActive(false);
+                        }
 					break;
 				}
 
 			} else {
 				//Si la nota toca el collider meh
 				if (noteCol.IsTouching (guideCol [indexposition - 1])) {
-					//print ("Tiempo tocar" + (indexposition - 1) + "=" + Time.time);
 					int scorePosition = Random.Range (1, 3);
 					bool ismeh = false;
 					switch (indexposition) {
@@ -191,7 +207,7 @@ public class GuitarMinigame : MonoBehaviour {
 							noteClone.GetComponent<SpriteRenderer> ().sprite = noteShine;
 							StartCoroutine (Fade (noteClone));
 							ismeh = true;
-						}
+                            }
 						break;
 					case 2:
 						if (Input.GetKeyDown (KeyCode.I)) {
@@ -199,21 +215,21 @@ public class GuitarMinigame : MonoBehaviour {
 							StartCoroutine (Fade (noteClone));
 							ismeh = true;
 						}
-						break;
+                            break;
 					case 3:
 						if (Input.GetKeyDown (KeyCode.O)) {
 							noteClone.GetComponent<SpriteRenderer> ().sprite = noteShine;
 							StartCoroutine (Fade (noteClone));
 							ismeh = true;
 						}
-						break;
+                            break;
 					case 4:
 						if (Input.GetKeyDown (KeyCode.P)) {
 							noteClone.GetComponent<SpriteRenderer> ().sprite = noteShine;
 							StartCoroutine (Fade (noteClone));
 							ismeh = true;
 						}
-						break;
+                            break;
 					}
 					switch (scorePosition) {
 					case 1:
@@ -221,33 +237,136 @@ public class GuitarMinigame : MonoBehaviour {
 							meh.transform.localPosition = new Vector3 (0.05f, 0.6f, 0f);
 							good.SetActive (false);
 							meh.SetActive (true);
-						}
+                            crap.SetActive(false);
+                            }
+                            
 						break;
 					case 2:
 						if (ismeh) {
 							meh.transform.localPosition = new Vector3 (1.35f, 0.7f, 0f);
-							good.SetActive (false);
+                            good.SetActive (false);
 							meh.SetActive (true);
-						}
-						break;
+                            crap.SetActive(false);
+                            }
+                            
+                            break;
 					case 3:
 						if (ismeh) {
 							meh.transform.localPosition = new Vector3 (1f, 0.07f, 0f);
 							good.SetActive (false);
 							meh.SetActive (true);
-						}
-						break;
+                            crap.SetActive(false);
+                            }
+                            
+                            break;
 					}
 
-				}
-			}
 
-			if(Input.GetKeyDown (KeyCode.Space)){
-				StartCoroutine (Fade (noteClone));
+                }/*else //Si no toca ningun collider y pulsas boton
+                {
+                    int scorePosition = Random.Range(1, 3);
+                    bool iscrap = false;
+                    switch (indexposition)
+                    {
+                        case 1:
+                            if (Input.GetKeyDown(KeyCode.U))
+                            {
+                                Destroy(noteClone);
+                                iscrap = true;
+                            }
+                            break;
+                        case 2:
+                            if (Input.GetKeyDown(KeyCode.I))
+                            {
+                                Destroy(noteClone);
+                                iscrap = true;
+                            }
+                            break;
+                        case 3:
+                            if (Input.GetKeyDown(KeyCode.O))
+                            {
+                                Destroy(noteClone);
+                                iscrap = true;
+                            }
+                            break;
+                        case 4:
+                            if (Input.GetKeyDown(KeyCode.P))
+                            {
+                                Destroy(noteClone);
+                                iscrap = true;
+                            }
+                            break;
+                    }
+                    switch (scorePosition)
+                    {
+                        case 1:
+                            if (iscrap)
+                            {
+                                crap.transform.localPosition = new Vector3(0.05f, 0.6f, 0f);
+                                crap.SetActive(true);
+                                good.SetActive(false);
+                                meh.SetActive(false);
+                            }
+                            
+                            break;
+                        case 2:
+                            if (iscrap)
+                            {
+                                crap.transform.localPosition = new Vector3(0.05f, 0.6f, 0f);
+                                crap.SetActive(true);
+                                good.SetActive(false);
+                                meh.SetActive(false);
+                            }
+
+                            break;
+                        case 3:
+                            if (iscrap)
+                            {
+                                crap.transform.localPosition = new Vector3(0.05f, 0.6f, 0f);
+                                crap.SetActive(true);
+                                good.SetActive(false);
+                                meh.SetActive(false);
+                            }
+
+                            break;
+                    }
+                }*/
 			}
+            
 			if (noteClone.transform.position.y <= 0.10f) {
-				StartCoroutine(Fade(noteClone));
-			}
+				int scorePosition = Random.Range(1, 3);
+                switch (scorePosition)
+                {
+                    case 1:
+                        
+                        crap.transform.localPosition = new Vector3(0.05f, 0.6f, 0f);
+                        crap.SetActive(true);
+                        good.SetActive(false);
+                        meh.SetActive(false);
+                        
+
+                        break;
+                    case 2:
+                        
+                        crap.transform.localPosition = new Vector3(0.05f, 0.6f, 0f);
+                        crap.SetActive(true);
+                        good.SetActive(false);
+                        meh.SetActive(false);
+                        
+
+                        break;
+                    case 3:
+                        
+                        crap.transform.localPosition = new Vector3(0.05f, 0.6f, 0f);
+                        crap.SetActive(true);
+                        good.SetActive(false);
+                        meh.SetActive(false);
+                        
+
+                        break;
+                }
+                StartCoroutine(Fade(noteClone));
+            }
 			yield return null;
 		}
 
