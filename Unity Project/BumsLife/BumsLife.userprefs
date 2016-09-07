@@ -1,8 +1,10 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GuitarMinigame.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Guitar\GuitarTrigger.cs">
     <Files>
-      <File FileName="Assets\Scripts\GuitarMinigame.cs" Line="95" Column="21" />
+      <File FileName="Assets\Scripts\Guitar\GuitarMinigame.cs" Line="54" Column="16" />
+      <File FileName="Assets\Scripts\Guitar\GuitarTrigger.cs" Line="11" Column="32" />
+      <File FileName="Assets\Scripts\Global\CameraController.cs" Line="28" Column="12" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

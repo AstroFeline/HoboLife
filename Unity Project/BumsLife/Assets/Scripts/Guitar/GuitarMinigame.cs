@@ -37,8 +37,7 @@ public class GuitarMinigame : MonoBehaviour {
 
         //fijamos la cantidad de notas que van a haber
 		int.TryParse(line[j].ToString(),out quantity);
-        print("cantidad=" + line[j]);
-		j++;
+        j++;
 
 
     }
@@ -52,11 +51,11 @@ public class GuitarMinigame : MonoBehaviour {
         }
     }
 	void FixedUpdate () {
-        PlayGuitar();
+		PlayGuitar();
 
     }
 
-    private void PlayGuitar()
+    public void PlayGuitar()
     {
 		//Impedimos que le hobo se mueva mientra toca la guitarra
 		if (isGuitarOn) {
@@ -396,6 +395,15 @@ public class GuitarMinigame : MonoBehaviour {
 		}
 
 		return line;
+	}
+
+	public bool IsGuitarOn {
+		get {
+			return this.isGuitarOn;
+		}
+		set {
+			isGuitarOn = value;
+		}
 	}
 
 }
