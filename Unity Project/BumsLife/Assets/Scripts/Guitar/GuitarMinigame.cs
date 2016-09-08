@@ -19,7 +19,7 @@ public class GuitarMinigame : MonoBehaviour {
 	private int quantity,j=0;
 	private float totalTime = 0.68f, activeSeconds=0;
 	private ArrayList line = new ArrayList();
-	private bool isSeconds = true;
+	private bool isSeconds = true, reset = true;
 
     void Start()
     {
@@ -32,37 +32,37 @@ public class GuitarMinigame : MonoBehaviour {
 			guideGoodCol[i] = guideGood[i].GetComponent<Collider2D> ();
 		}
 
-        //obtenemos las lineas y los segundos leyendo del txt
-		line = ReadTxt ();
-
-        //fijamos la cantidad de notas que van a haber
-		int.TryParse(line[j].ToString(),out quantity);
-        j++;
-
-
     }
-    void Update()
-    {
-        //provisional
-        if (Input.GetKeyDown(KeyCode.Keypad0))
-        {
-            isGuitarOn = !isGuitarOn;
-
-        }
-    }
+    
 	void FixedUpdate () {
 		PlayGuitar();
 
     }
+	public void Getlines(){
+		if (reset) {
+			//obtenemos las lineas y los segundos leyendo del txt
+			line = ReadTxt ();
 
+			//fijamos la cantidad de notas que van a haber
+			int.TryParse (line [j].ToString (), out quantity);
+			j++;
+			reset = false;
+		}
+	}
     public void PlayGuitar()
     {
+		Getlines ();
 		//Impedimos que le hobo se mueva mientra toca la guitarra
 		if (isGuitarOn) {
-			GetComponent<PlayerController>().IsMovingD = false;
-			GetComponent<PlayerController>().IsMovingU = false;
-			GetComponent<PlayerController>().IsMovingL = false;
-			GetComponent<PlayerController>().IsMovingR = false;
+			GetComponent<PlayerController> ().IsMovingD = false;
+			GetComponent<PlayerController> ().IsMovingU = false;
+			GetComponent<PlayerController> ().IsMovingL = false;
+			GetComponent<PlayerController> ().IsMovingR = false;
+
+
+		} else {
+			audios.Stop();
+
 		}
         //animacion guitarrista
         anim.SetBool("guitarOn", isGuitarOn);
@@ -83,46 +83,61 @@ public class GuitarMinigame : MonoBehaviour {
 
             //Si el tiempo esta entre los segundos iniciales de cada nota, el tiempo desde el inicio de la guitarra y le sumamos el intervalo en el que tarda la nota en llegar al objetivo
             if (Time.time<=((seconds + activeSeconds+0.01f)+ totalTime) && Time.time>=((seconds  + activeSeconds-0.01f)- totalTime) ) {
-				print ("Segundos actuales=" + Time.time + " objetivo=" + ( (seconds + activeSeconds)-totalTime));
+				//print ("Segundos actuales=" + Time.time + " objetivo=" + ( (seconds + activeSeconds)-totalTime));
                 //mientras haya notas
 				if (quantity > 0) {
-                    //Randomizamos la posicion de cada nota
-                    int indexPosition = Random.Range(1, 5);
-		            float positionX = 0;
-		            switch (indexPosition)
-		            {
-		                case 1:
-		                    positionX = 0.48f;
-		                    break;
-		                case 2:
-		                    positionX = 0.64f;
-		                    break;
-		                case 3:
-		                    positionX = 0.80f;
-		                    break;
-		                case 4:
-		                    positionX = 0.96f;
-		                    break;
-		            }
+					//Randomizamos la posicion de cada nota
+					int indexPosition = Random.Range (1, 5);
+					float positionX = 0;
+					switch (indexPosition) {
+					case 1:
+						positionX = 0.48f;
+						break;
+					case 2:
+						positionX = 0.64f;
+						break;
+					case 3:
+						positionX = 0.80f;
+						break;
+					case 4:
+						positionX = 0.96f;
+						break;
+					}
 
 
-					float speed = 1;//Random.Range(1,4);
-                    //instanciamos cada nota con sus parametros
+					float speed = 1;//Random.Range(1,4) si queremos meterle dificultad extra
+
+					//instanciamos cada nota con sus parametros
 					GameObject noteClone = (GameObject)Instantiate (goNote, new Vector3 (positionX, 1.07f, 0), Quaternion.identity, GameObject.Find ("Hobo").transform);
-					noteClone.transform.localPosition=new Vector3(positionX,1.07f, 0);
-                    //Llamamos al movimiento de la nota
+					noteClone.transform.localPosition = new Vector3 (positionX, 1.07f, 0);
+					//Llamamos al movimiento de la nota
 					StartCoroutine (Moving (noteClone, speed, indexPosition));
 
-					if(j<line.Count)j++;
+					if (j < line.Count)
+						j++;
 					quantity--;
-
+					print ("cantidad=" + quantity);
 				}
 
+
 			}
-            
-        }
+			if(quantity<=0) {
+				audios.Stop ();
+				isGuitarOn = false;
+				GameObject.Find ("Main Camera").GetComponent<CameraController> ().IsZoom = false;
+			}
+		}
         else {
 			guide[0].SetActive (false);
+			line.Clear ();
+			quantity = 0;
+			crap.SetActive (false);
+			meh.SetActive (false);
+			good.SetActive (false);
+			j = 0;
+			reset = true;
+			audios.Stop ();
+			isSeconds = true;
 		}
 		 
 
@@ -136,7 +151,7 @@ public class GuitarMinigame : MonoBehaviour {
 			Collider2D noteCol = noteClone.GetComponent<Collider2D> ();
             //Si la nota toca el collider good
 			if (noteCol.IsTouching (guideGoodCol [indexposition - 1])) {
-				int scorePosition = Random.Range (1, 3);
+				int scorePosition = Random.Range (1, 4);
 				bool isgood = false;
 				switch (indexposition) {
 				case 1:
@@ -198,7 +213,7 @@ public class GuitarMinigame : MonoBehaviour {
 			} else {
 				//Si la nota toca el collider meh
 				if (noteCol.IsTouching (guideCol [indexposition - 1])) {
-					int scorePosition = Random.Range (1, 3);
+					int scorePosition = Random.Range (1, 4);
 					bool ismeh = false;
 					switch (indexposition) {
 					case 1:
@@ -261,79 +276,11 @@ public class GuitarMinigame : MonoBehaviour {
 					}
 
 
-                }/*else //Si no toca ningun collider y pulsas boton
-                {
-                    int scorePosition = Random.Range(1, 3);
-                    bool iscrap = false;
-                    switch (indexposition)
-                    {
-                        case 1:
-                            if (Input.GetKeyDown(KeyCode.U))
-                            {
-                                Destroy(noteClone);
-                                iscrap = true;
-                            }
-                            break;
-                        case 2:
-                            if (Input.GetKeyDown(KeyCode.I))
-                            {
-                                Destroy(noteClone);
-                                iscrap = true;
-                            }
-                            break;
-                        case 3:
-                            if (Input.GetKeyDown(KeyCode.O))
-                            {
-                                Destroy(noteClone);
-                                iscrap = true;
-                            }
-                            break;
-                        case 4:
-                            if (Input.GetKeyDown(KeyCode.P))
-                            {
-                                Destroy(noteClone);
-                                iscrap = true;
-                            }
-                            break;
-                    }
-                    switch (scorePosition)
-                    {
-                        case 1:
-                            if (iscrap)
-                            {
-                                crap.transform.localPosition = new Vector3(0.05f, 0.6f, 0f);
-                                crap.SetActive(true);
-                                good.SetActive(false);
-                                meh.SetActive(false);
-                            }
-                            
-                            break;
-                        case 2:
-                            if (iscrap)
-                            {
-                                crap.transform.localPosition = new Vector3(0.05f, 0.6f, 0f);
-                                crap.SetActive(true);
-                                good.SetActive(false);
-                                meh.SetActive(false);
-                            }
-
-                            break;
-                        case 3:
-                            if (iscrap)
-                            {
-                                crap.transform.localPosition = new Vector3(0.05f, 0.6f, 0f);
-                                crap.SetActive(true);
-                                good.SetActive(false);
-                                meh.SetActive(false);
-                            }
-
-                            break;
-                    }
-                }*/
+                }
 			}
             
 			if (noteClone.transform.position.y <= 0.10f) {
-				int scorePosition = Random.Range(1, 3);
+				int scorePosition = Random.Range(1, 4);
                 switch (scorePosition)
                 {
                     case 1:

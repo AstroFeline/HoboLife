@@ -19,14 +19,6 @@ public class CameraController : MonoBehaviour {
 
         if (IsTarget)
             transform.position = target.transform.position- new Vector3 (0,0, distance);
-
-        /*//PRUEBA, SE ELIMINARA
-        if (Input.GetKeyDown(KeyCode.Keypad0))
-        {
-			isZoom = !isZoom;
-
-        }*/
-        //
 		if (isZoom) {
 			if (Camera.main.orthographicSize > 1) {
 				ZoomIn ();
@@ -34,19 +26,17 @@ public class CameraController : MonoBehaviour {
 		} else {
 			if (Camera.main.orthographicSize < camOrthographic) {
 				ZoomOut ();
-			} else {
-				transform.position = camInitPosition + new Vector3 (0, 0, camOrthographic);
-
-			}
+			} 
 		}
 	}
 
     public void ZoomIn(){
+		transform.position = Vector3.MoveTowards(transform.position,target.transform.position- new Vector3(0, 0, Camera.main.orthographicSize),0.1f);
         Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, Camera.main.orthographicSize - 500, Time.deltaTime * 0.7f);
-        transform.position = target.transform.position - new Vector3(0, 0, Camera.main.orthographicSize);
     }
 
 	public void ZoomOut(){
+		transform.position = Vector3.MoveTowards(transform.position,camInitPosition + new Vector3 (0, 0, camOrthographic),0.1f);
 		Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, camOrthographic + 500, Time.deltaTime * 0.7f);
 	}
 
