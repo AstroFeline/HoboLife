@@ -124,7 +124,7 @@ public class NPCController : MonoBehaviour {
                 chooseDirection();
             }
         }
-        anim.SetFloat("Speed", moveSpeed);
+		anim.SetFloat("SpeedNpc", moveSpeed);
     }
 
     public void chooseDirection()

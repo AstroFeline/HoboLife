@@ -7,7 +7,7 @@ using System.IO;
 public class GuitarMinigame : MonoBehaviour {
 
 	public GameObject[] guide,guideGood;
-	public GameObject goNote, crap, meh, good;
+	public GameObject goNote, crap, meh, good, money;
 	public Sprite noteShine;
 	public AudioClip themeSong;
 
@@ -16,7 +16,7 @@ public class GuitarMinigame : MonoBehaviour {
     private bool isGuitarOn;
 	private Collider2D[] guideCol = new Collider2D[4];
 	private Collider2D[] guideGoodCol= new Collider2D[4];
-	private int quantity,j=0;
+	private int quantity,j=0, score=0;
 	private float totalTime = 0.68f, activeSeconds=0;
 	private ArrayList line = new ArrayList();
 	private bool isSeconds = true, reset = true;
@@ -78,6 +78,7 @@ public class GuitarMinigame : MonoBehaviour {
 			}
             //Activamos el sprite de las cuerdas y en cada loop del update tomamos los segundos de la cancion
 			guide[0].SetActive (true);
+			money.SetActive (true);
 			float seconds;
 			float.TryParse (line[j].ToString(),out seconds);
 
@@ -138,6 +139,7 @@ public class GuitarMinigame : MonoBehaviour {
 			reset = true;
 			audios.Stop ();
 			isSeconds = true;
+			money.SetActive (false);
 		}
 		 
 
