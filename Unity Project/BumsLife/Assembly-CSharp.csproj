@@ -55,6 +55,7 @@
      <Compile Include="Assets\Scripts\Guitar\GuitarTrigger.cs" />
      <Compile Include="Assets\Scripts\Guitar\Note.cs" />
      <Compile Include="Assets\Scripts\NPC\NPCController.cs" />
+     <Compile Include="Assets\Scripts\NPC\NpcEspectatorIA.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
      <None Include="Assets\StreamingAssets\Song.txt" />
      <None Include="Assets\StreamingAssets\Dialogues\Dialogues.txt" />

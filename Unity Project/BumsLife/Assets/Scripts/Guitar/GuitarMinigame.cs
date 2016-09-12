@@ -1,22 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.IO;
+using UnityEngine.UI;
 
 
 
 public class GuitarMinigame : MonoBehaviour {
 
 	public GameObject[] guide,guideGood;
-	public GameObject goNote, crap, meh, good, money;
+	public GameObject goNote, crap, meh, good, money,goCombo,gotextCombo1,gotextCombo2;
 	public Sprite noteShine;
 	public AudioClip themeSong;
+	public Text moneyText1, moneyText2,comboTxt1,comboTxt2;
 
 	private AudioSource audios;
     private Animator anim;
     private bool isGuitarOn;
 	private Collider2D[] guideCol = new Collider2D[4];
 	private Collider2D[] guideGoodCol= new Collider2D[4];
-	private int quantity,j=0, score=0;
+	private int quantity,j=0, score=0,comboAux=0,combo=1;
 	private float totalTime = 0.68f, activeSeconds=0;
 	private ArrayList line = new ArrayList();
 	private bool isSeconds = true, reset = true;
@@ -51,6 +53,20 @@ public class GuitarMinigame : MonoBehaviour {
 	}
     public void PlayGuitar()
     {
+		if (comboAux >= 1) {
+			goCombo.SetActive (true);
+			gotextCombo1.SetActive (true);
+			gotextCombo2.SetActive (true);
+			comboTxt1.text = combo.ToString ();
+			comboTxt2.text = combo.ToString ();
+			print ("combo=" + combo);
+		} else {
+			goCombo.SetActive (false);
+			gotextCombo1.SetActive (false);
+			gotextCombo2.SetActive (false);
+			comboTxt1.text = combo.ToString ();
+			comboTxt2.text = combo.ToString ();
+		}
 		Getlines ();
 		//Impedimos que le hobo se mueva mientra toca la guitarra
 		if (isGuitarOn) {
@@ -140,6 +156,13 @@ public class GuitarMinigame : MonoBehaviour {
 			audios.Stop ();
 			isSeconds = true;
 			money.SetActive (false);
+			combo = 1;
+			score = 0;
+			gotextCombo1.SetActive (false);
+			gotextCombo2.SetActive (false);
+			comboTxt1.text = "0";
+			comboTxt2.text = "0";
+			comboAux = 0;
 		}
 		 
 
@@ -161,6 +184,17 @@ public class GuitarMinigame : MonoBehaviour {
 						noteClone.GetComponent<SpriteRenderer> ().sprite = noteShine;
 						StartCoroutine (Fade (noteClone));
 						isgood = true;
+
+						moneyText1.text = score.ToString ();
+						moneyText2.text = score.ToString ();
+						comboAux++;
+						if (comboAux % 5 == 0) {
+							combo +=1;
+						}
+						score = score + (combo*2);
+						//score = score*(int)combo;
+						//print ("resulti=" + score);
+
 					}
 					break;
 				case 2:
@@ -168,6 +202,15 @@ public class GuitarMinigame : MonoBehaviour {
 						noteClone.GetComponent<SpriteRenderer> ().sprite = noteShine;
 						StartCoroutine (Fade (noteClone));
 						isgood = true;
+						moneyText1.text = score.ToString ();
+						moneyText2.text = score.ToString ();
+						comboAux++;
+						if (comboAux % 5 == 0) {
+							combo +=1;
+						}
+						score = score + (combo*2);
+						//score = score*(int)combo;
+						//print ("resulti=" + score);
 					}
 					break;
 				case 3:
@@ -175,6 +218,15 @@ public class GuitarMinigame : MonoBehaviour {
 						noteClone.GetComponent<SpriteRenderer> ().sprite = noteShine;
 						StartCoroutine (Fade (noteClone));
 						isgood = true;
+						moneyText1.text = score.ToString ();
+						moneyText2.text = score.ToString ();
+						comboAux++;
+						if (comboAux % 5 == 0) {
+							combo +=1;
+						}
+						score = score + (combo*2);
+						//score = score*(int)combo;
+						//print ("resulti=" + score);
 					}
 					break;
 				case 4:
@@ -182,6 +234,15 @@ public class GuitarMinigame : MonoBehaviour {
 						noteClone.GetComponent<SpriteRenderer> ().sprite = noteShine;
 						StartCoroutine (Fade (noteClone));
 						isgood = true;
+						moneyText1.text = score.ToString ();
+						moneyText2.text = score.ToString ();
+						comboAux++;
+						if (comboAux % 5 == 0) {
+							combo +=1;
+						}
+						score = score + (combo*2);
+						//score = score*(int)combo;
+						//print ("resulti=" + score);
 					}
 					break;
 				}
@@ -223,6 +284,15 @@ public class GuitarMinigame : MonoBehaviour {
 							noteClone.GetComponent<SpriteRenderer> ().sprite = noteShine;
 							StartCoroutine (Fade (noteClone));
 							ismeh = true;
+							moneyText1.text = score.ToString ();
+							moneyText2.text = score.ToString ();
+							comboAux++;
+							if (comboAux % 5 == 0) {
+								combo +=1;
+							}
+							score = score + combo;
+							//score = score*(int)combo;
+							//print ("resulti=" + score);
                             }
 						break;
 					case 2:
@@ -230,6 +300,15 @@ public class GuitarMinigame : MonoBehaviour {
 							noteClone.GetComponent<SpriteRenderer> ().sprite = noteShine;
 							StartCoroutine (Fade (noteClone));
 							ismeh = true;
+							moneyText1.text = score.ToString ();
+							moneyText2.text = score.ToString ();
+							comboAux++;
+							if (comboAux % 5 == 0) {
+								combo +=1;
+							}
+							score = score + combo;
+							//score = score*(int)combo;
+							//print ("resulti=" + score);
 						}
                             break;
 					case 3:
@@ -237,6 +316,15 @@ public class GuitarMinigame : MonoBehaviour {
 							noteClone.GetComponent<SpriteRenderer> ().sprite = noteShine;
 							StartCoroutine (Fade (noteClone));
 							ismeh = true;
+							moneyText1.text = score.ToString ();
+							moneyText2.text = score.ToString ();
+							comboAux++;
+							if (comboAux % 5 == 0) {
+								combo +=1;
+							}
+							score = score + combo;
+							//score = score*(int)combo;
+							//print ("resulti=" + score);
 						}
                             break;
 					case 4:
@@ -244,6 +332,15 @@ public class GuitarMinigame : MonoBehaviour {
 							noteClone.GetComponent<SpriteRenderer> ().sprite = noteShine;
 							StartCoroutine (Fade (noteClone));
 							ismeh = true;
+							moneyText1.text = score.ToString ();
+							moneyText2.text = score.ToString ();
+							comboAux++;
+							if (comboAux % 5 == 0) {
+								combo +=1;
+							}
+							score = score + combo;
+							//score = score*(int)combo;
+							//print ("resulti=" + score);
 						}
                             break;
 					}
@@ -285,33 +382,33 @@ public class GuitarMinigame : MonoBehaviour {
 				int scorePosition = Random.Range(1, 4);
                 switch (scorePosition)
                 {
-                    case 1:
+				case 1:
                         
-                        crap.transform.localPosition = new Vector3(0.05f, 0.6f, 0f);
-                        crap.SetActive(true);
-                        good.SetActive(false);
-                        meh.SetActive(false);
-                        
-
-                        break;
-                    case 2:
-                        
-                        crap.transform.localPosition = new Vector3(0.05f, 0.6f, 0f);
-                        crap.SetActive(true);
-                        good.SetActive(false);
-                        meh.SetActive(false);
-                        
-
-                        break;
-                    case 3:
-                        
-                        crap.transform.localPosition = new Vector3(0.05f, 0.6f, 0f);
-                        crap.SetActive(true);
-                        good.SetActive(false);
-                        meh.SetActive(false);
-                        
-
-                        break;
+					crap.transform.localPosition = new Vector3 (0.05f, 0.6f, 0f);
+					crap.SetActive (true);
+					good.SetActive (false);
+					meh.SetActive (false);
+					combo = 1;
+					comboAux = 0;
+					break;
+                case 2:
+                    
+                    crap.transform.localPosition = new Vector3(0.05f, 0.6f, 0f);
+                    crap.SetActive(true);
+                    good.SetActive(false);
+                    meh.SetActive(false);
+					combo = 1;
+					comboAux = 0;
+					break;
+                case 3:
+                    
+                    crap.transform.localPosition = new Vector3(0.05f, 0.6f, 0f);
+                    crap.SetActive(true);
+                    good.SetActive(false);
+                    meh.SetActive(false);
+					combo = 1;
+					comboAux = 0;
+                    break;
                 }
                 StartCoroutine(Fade(noteClone));
             }
@@ -332,6 +429,10 @@ public class GuitarMinigame : MonoBehaviour {
 			yield return null;
 		}
 
+	}
+
+	private void CalculaCombo(){
+			
 	}
 
 	private ArrayList ReadTxt(){
