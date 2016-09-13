@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class GuitarMinigame : MonoBehaviour {
 
 	public GameObject[] guide,guideGood;
-	public GameObject goNote, crap, meh, good, money,goCombo,gotextCombo1,gotextCombo2;
+	public GameObject goNote, crap, meh, good, money,goCombo,gotextCombo1,gotextCombo2,npc1,npc2,npc3,npc4;
 	public Sprite noteShine;
 	public AudioClip themeSong;
 	public Text moneyText1, moneyText2,comboTxt1,comboTxt2;
@@ -18,9 +18,10 @@ public class GuitarMinigame : MonoBehaviour {
     private bool isGuitarOn;
 	private Collider2D[] guideCol = new Collider2D[4];
 	private Collider2D[] guideGoodCol= new Collider2D[4];
-	private int quantity,j=0, score=0,comboAux=0,combo=1;
+	private int quantity,j=0, score=0,comboAux=0,combo=1,npcCounter=6;
 	private float totalTime = 0.68f, activeSeconds=0;
 	private ArrayList line = new ArrayList();
+	private ArrayList repeatPosition = new ArrayList();
 	private bool isSeconds = true, reset = true;
 
     void Start()
@@ -133,7 +134,9 @@ public class GuitarMinigame : MonoBehaviour {
 					if (j < line.Count)
 						j++;
 					quantity--;
-					print ("cantidad=" + quantity);
+
+					//Hacemos que aparezcan los NPCs
+					GeneraNPC();
 				}
 
 
@@ -163,10 +166,72 @@ public class GuitarMinigame : MonoBehaviour {
 			comboTxt1.text = "0";
 			comboTxt2.text = "0";
 			comboAux = 0;
+			repeatPosition.Clear ();
+
 		}
 		 
 
     }
+
+	private void GeneraNPC(){
+		if (npcCounter > 0) {
+			bool found;
+			int i = 0;
+			int randomPosition=0;
+			if (repeatPosition.Count < 6) {
+				do {
+					i = 0;
+					found = false;
+					randomPosition = Random.Range (1, 7);
+					while (i < repeatPosition.Count) {
+						if ((int)repeatPosition [i] == randomPosition) {
+							found = true;
+						}
+						i++;
+					}
+				} while (found);
+				repeatPosition.Add (randomPosition);
+			}
+			int wichNpc =Random.Range (1, 5);
+			GameObject npc=npc1;
+			switch (wichNpc) {
+			case 1:
+				npc = npc1;
+				break;
+			case 2:
+				npc = npc2;
+				break;
+			case 3:
+				npc = npc3;
+				break;
+			case 4:
+				npc = npc4;
+				break;
+			}
+
+			switch (randomPosition) {
+			case 1:
+				Instantiate (npc, new Vector3 (-1.7f, -1.3f, 0), Quaternion.identity);
+				break;
+			case 2:
+				Instantiate (npc, new Vector3 (-0.75f, -1.3f, 0), Quaternion.identity);
+				break;
+			case 3:
+				Instantiate (npc, new Vector3 (0.25f, -1.3f, 0), Quaternion.identity);
+				break;
+			case 4:
+				Instantiate (npc, new Vector3 (0.7f, -0.6f, 0), Quaternion.identity);
+				break;
+			case 5:
+				Instantiate (npc, new Vector3 (-3.2f, -0.6f, 0), Quaternion.identity);
+				break;
+			case 6:
+				Instantiate (npc, new Vector3 (-2.7f, -1.3f, 0), Quaternion.identity);
+				break;
+			}
+
+		}
+	}
 
 	private IEnumerator Moving(GameObject noteClone, float speed,int indexposition){
        
