@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour{
         }else{
             moveSpeed = 0;
         }
-
+		print ("movespeed=" + moveSpeed);
         anim.SetFloat("Speed", moveSpeed);
 
     }

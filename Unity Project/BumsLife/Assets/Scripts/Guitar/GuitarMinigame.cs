@@ -39,7 +39,12 @@ public class GuitarMinigame : MonoBehaviour {
     
 	void FixedUpdate () {
 		PlayGuitar();
-
+		print ("npccounter=" + npcCounter + " quantity=" + quantity);
+		if (npcCounter == 6 && quantity==-5) {
+			audios.Stop ();
+			isGuitarOn = false;
+			GameObject.Find ("Main Camera").GetComponent<CameraController> ().IsZoom = false;
+		}
     }
 	public void Getlines(){
 		if (reset) {
@@ -86,18 +91,19 @@ public class GuitarMinigame : MonoBehaviour {
 
         //si la camara esta enfocada en el guitarrista
 		if (Camera.main.orthographicSize <= 1) {
-            //tomamos el tiempo de inicio del guitarritas y empieza la cancion
+			//tomamos el tiempo de inicio del guitarritas y empieza la cancion
 			if (isSeconds) {
 				activeSeconds = Time.time;
 				audios.clip = themeSong;
-				audios.Play();
+				audios.Play ();
 				isSeconds = false;
 			}
-            //Activamos el sprite de las cuerdas y en cada loop del update tomamos los segundos de la cancion
-			guide[0].SetActive (true);
+			//Activamos el sprite de las cuerdas y en cada loop del update tomamos los segundos de la cancion
+			guide [0].SetActive (true);
 			money.SetActive (true);
-			float seconds;
-			float.TryParse (line[j].ToString(),out seconds);
+			float seconds=0;
+
+			if (j < line.Count)	float.TryParse (line [j].ToString (), out seconds);
 
             //Si el tiempo esta entre los segundos iniciales de cada nota, el tiempo desde el inicio de la guitarra y le sumamos el intervalo en el que tarda la nota en llegar al objetivo
             if (Time.time<=((seconds + activeSeconds+0.01f)+ totalTime) && Time.time>=((seconds  + activeSeconds-0.01f)- totalTime) ) {
@@ -123,7 +129,7 @@ public class GuitarMinigame : MonoBehaviour {
 					}
 
 
-					float speed = 1;//Random.Range(1,4) si queremos meterle dificultad extra
+					float speed = 1;
 
 					//instanciamos cada nota con sus parametros
 					GameObject noteClone = (GameObject)Instantiate (goNote, new Vector3 (positionX, 1.07f, 0), Quaternion.identity, GameObject.Find ("Hobo").transform);
@@ -131,21 +137,18 @@ public class GuitarMinigame : MonoBehaviour {
 					//Llamamos al movimiento de la nota
 					StartCoroutine (Moving (noteClone, speed, indexPosition));
 
-					if (j < line.Count)
-						j++;
+					if (j < line.Count)	j++;
 					quantity--;
 
 					//Hacemos que aparezcan los NPCs
 					GeneraNPC();
 				}
-
-
 			}
 			if(quantity<=0) {
-				audios.Stop ();
-				isGuitarOn = false;
-				GameObject.Find ("Main Camera").GetComponent<CameraController> ().IsZoom = false;
+				print ("npccounter 0=" + npcCounter);
+
 			}
+
 		}
         else {
 			guide[0].SetActive (false);
@@ -229,7 +232,7 @@ public class GuitarMinigame : MonoBehaviour {
 				Instantiate (npc, new Vector3 (-2.7f, -1.3f, 0), Quaternion.identity);
 				break;
 			}
-
+			npcCounter--;
 		}
 	}
 
@@ -520,5 +523,29 @@ public class GuitarMinigame : MonoBehaviour {
 			isGuitarOn = value;
 		}
 	}
+	public int Quantity {
+		get {
+			return this.quantity;
+		}
+		set {
+			quantity = value;
+		}
+	}
+	public int NpcCounter {
+		get {
+			return this.npcCounter;
+		}
+		set {
+			npcCounter = value;
+		}
+	}
 
+	public int Score {
+		get {
+			return this.score;
+		}
+		set {
+			score = value;
+		}
+	}
 }

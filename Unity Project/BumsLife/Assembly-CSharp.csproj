@@ -51,6 +51,7 @@
      <Compile Include="Assets\Scripts\Global\CameraController.cs" />
      <Compile Include="Assets\Scripts\Global\Collision.cs" />
      <Compile Include="Assets\Scripts\Global\Pause.cs" />
+     <Compile Include="Assets\Scripts\Guitar\GuitarEnd.cs" />
      <Compile Include="Assets\Scripts\Guitar\GuitarMinigame.cs" />
      <Compile Include="Assets\Scripts\Guitar\GuitarTrigger.cs" />
      <Compile Include="Assets\Scripts\Guitar\Note.cs" />
