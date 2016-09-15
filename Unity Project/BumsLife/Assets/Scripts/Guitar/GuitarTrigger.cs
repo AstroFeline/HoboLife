@@ -10,7 +10,7 @@ public class GuitarTrigger : MonoBehaviour {
 		if (isTrigger && Input.GetKeyDown (KeyCode.Space)) {
 			if(guitar.activeSelf)guitar.SetActive (false);
 				else guitar.SetActive (true);
-			GameObject.Find ("Main Camera").GetComponent<CameraController> ().IsZoom = !GameObject.Find ("Main Camera").GetComponent<CameraController> ().IsZoom;
+			GameObject.Find ("Main Camera").GetComponent<CameraController> ().IsZoom = true;//!GameObject.Find ("Main Camera").GetComponent<CameraController> ().IsZoom;
 			GameObject.Find ("Hobo").GetComponent<PlayerController> ().Flip (0.1f);
 			GameObject.Find ("Hobo").GetComponent<GuitarMinigame> ().IsGuitarOn = !GameObject.Find ("Hobo").GetComponent<GuitarMinigame> ().IsGuitarOn;
 			GameObject.Find ("Hobo").GetComponent<GuitarMinigame> ().PlayGuitar ();
