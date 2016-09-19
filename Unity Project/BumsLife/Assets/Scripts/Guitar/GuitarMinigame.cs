@@ -8,14 +8,14 @@ using UnityEngine.UI;
 public class GuitarMinigame : MonoBehaviour {
 
 	public GameObject[] guide,guideGood;
-	public GameObject goNote, crap, meh, good, money,goCombo,gotextCombo1,gotextCombo2,npc1,npc2,npc3,npc4;
+	public GameObject goNote, crap, meh, good, money,goCombo,gotextCombo1,gotextCombo2,npc1,npc2,npc3,npc4,totalEarn,moneyText;
 	public Sprite noteShine;
 	public AudioClip themeSong;
 	public Text moneyText1, moneyText2,comboTxt1,comboTxt2;
 
 	private AudioSource audios;
     private Animator anim;
-    private bool isGuitarOn;
+    private bool isGuitarOn, isGuitarEnd;
 	private Collider2D[] guideCol = new Collider2D[4];
 	private Collider2D[] guideGoodCol= new Collider2D[4];
 	private int quantity,j=0, score=0,comboAux=0,combo=1,npcCounter=6,auxCounter=0;
@@ -23,6 +23,7 @@ public class GuitarMinigame : MonoBehaviour {
 	private ArrayList line = new ArrayList();
 	private ArrayList repeatPosition = new ArrayList();
 	private bool isSeconds = true, reset = true;
+	private RectTransform rectTrans;
 
     void Start()
     {
@@ -34,26 +35,26 @@ public class GuitarMinigame : MonoBehaviour {
 			guideCol[i] = guide[i].GetComponent<Collider2D> ();
 			guideGoodCol[i] = guideGood[i].GetComponent<Collider2D> ();
 		}
-
+		rectTrans = moneyText.GetComponent<RectTransform> ();
     }
     
 	void Update(){
-		
+
+		if (Input.GetKeyDown (KeyCode.M)) {
+			isGuitarEnd = true;
+
+		}
+
 		if ((npcCounter == auxCounter && quantity==-5)){
 			print ("npccounter=" + npcCounter + " auxcounter=" + auxCounter);
-			/*if (!isGuitarOn) {
-				//StartCoroutine (Wait ());
-				audios.Stop ();
-				GameObject.Find ("Main Camera").GetComponent<CameraController> ().IsZoom = false;
-			} else {*/
-				audios.Stop ();
-				isGuitarOn = false;
-				GameObject.Find ("Main Camera").GetComponent<CameraController> ().IsZoom = false;
-			//}
-		}
+			audios.Stop ();
+			isGuitarOn = false;
+			GameObject.Find ("Main Camera").GetComponent<CameraController> ().IsZoom = false;
+		}	
 	}
 	void FixedUpdate () {
 		PlayGuitar();
+		if(isGuitarEnd) EndMinigame ();
 
     }
 	public void Getlines(){
@@ -69,6 +70,9 @@ public class GuitarMinigame : MonoBehaviour {
 	}
     public void PlayGuitar()
     {
+		//print ("npccounter=" + npcCounter + " auxcounter=" + auxCounter);
+
+		//iNICIALIZAMOS EL CONTADOR DE COMBO
 		if (comboAux >= 1) {
 			goCombo.SetActive (true);
 			gotextCombo1.SetActive (true);
@@ -155,7 +159,7 @@ public class GuitarMinigame : MonoBehaviour {
 				}
 			}
 			if(quantity<=0) {
-				print ("npccounter 0=" + npcCounter);
+				//print ("npccounter 0=" + npcCounter);
 
 			}
 
@@ -181,18 +185,31 @@ public class GuitarMinigame : MonoBehaviour {
 			comboTxt2.text = "0";
 			comboAux = 0;
 			repeatPosition.Clear ();
+			npcCounter = 6;
 
 		}
 		 
 
     }
 
-	private IEnumerator Wait(){
-		yield return new WaitForSeconds(3);
-		//audios.Stop ();
-		GameObject.Find ("Main Camera").GetComponent<CameraController> ().IsZoom = false;
+	private void EndMinigame(){
+		anim.SetBool("endGuitar", isGuitarEnd);
+		totalEarn.SetActive (true);
+		rectTrans.anchoredPosition = new Vector3 (268f, -190f, 0);
+		StartCoroutine (ChangeSize ());
 	}
 
+	private IEnumerator ChangeSize(){
+		while (true) {
+			yield return new WaitForSeconds (1f);
+			print ("corrutina1");
+			rectTrans.localScale = new Vector3 (0.60f, 0.60f, 1);
+			yield return new WaitForSeconds (1f);
+			print ("corrutina1");
+			rectTrans.localScale = new Vector3 (0.29f, 0.29f, 1);
+		}
+		
+	}
 	private void GeneraNPC(){
 		if (npcCounter > 0) {
 			bool found;

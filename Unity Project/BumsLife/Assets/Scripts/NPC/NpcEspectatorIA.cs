@@ -9,7 +9,8 @@ public class NpcEspectatorIA : MonoBehaviour {
 	private bool isDancing,X=true;
 	private SpriteRenderer spriteRend;
 	private string facing;
-	private Vector3 posInicial;
+	private Vector3 posInicial, posInicial2;
+
 
 	void Start () {
 		speed = 0.5f;
@@ -22,6 +23,8 @@ public class NpcEspectatorIA : MonoBehaviour {
 		}
 		speed = Random.Range (0.3f, 1f);
 		posInicial = transform.position;
+		posInicial2 = new Vector3 (posInicial.x - 5, posInicial.y, posInicial.z);
+
 	}
 
 	void FixedUpdate(){
@@ -33,12 +36,6 @@ public class NpcEspectatorIA : MonoBehaviour {
 			MovimientoNpc ();
 		}
 
-	}
-
-	void Update(){
-		if (Input.GetKeyDown (KeyCode.L)) {
-			MovimientoAtras ();
-		}
 	}
 
 	void MovimientoNpc(){
@@ -72,16 +69,17 @@ public class NpcEspectatorIA : MonoBehaviour {
 
 	void MovimientoAtras(){
 		X = false;
-		//print ("Npc=" +this.gameObject.name + "PosIni " + posInicial + "PosActual="+transform.position );
+
 		isDancing = false;
 		if (transform.position.x > target.x) {
 			spriteRend.flipX = true;	
 		}
-		speed = Random.Range (0.3f, 1f);
+		speed = Random.Range (1, 3);
 		anim.SetBool (facing, isDancing);
 		anim.SetFloat("SpeedNpc", speed);
-		transform.position = Vector3.MoveTowards(transform.position,posInicial/*new Vector3(0.7f,-0.6f,0)*/ ,Time.deltaTime*speed);
-		if (transform.position == posInicial) {
+		transform.position = Vector3.MoveTowards(transform.position,posInicial2,Time.deltaTime*speed);
+		if (transform.position == posInicial2) {
+			
 			GameObject.Find ("Hobo").GetComponent<GuitarMinigame> ().NpcCounter += 1;
 			GameObject.Find ("Hobo").GetComponent<GuitarMinigame> ().Quantity = -5;
 			print ("destruyeme");
