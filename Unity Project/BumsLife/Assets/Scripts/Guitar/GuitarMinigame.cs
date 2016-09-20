@@ -22,8 +22,9 @@ public class GuitarMinigame : MonoBehaviour {
 	private float totalTime = 0.68f, activeSeconds=0;
 	private ArrayList line = new ArrayList();
 	private ArrayList repeatPosition = new ArrayList();
-	private bool isSeconds = true, reset = true;
+	private bool isSeconds = true, reset = true,isBig=false;
 	private RectTransform rectTrans;
+	private Vector3 moneyInitPosition;
 
     void Start()
     {
@@ -36,25 +37,33 @@ public class GuitarMinigame : MonoBehaviour {
 			guideGoodCol[i] = guideGood[i].GetComponent<Collider2D> ();
 		}
 		rectTrans = moneyText.GetComponent<RectTransform> ();
+		moneyInitPosition = rectTrans.localPosition;
     }
     
 	void Update(){
 
-		if (Input.GetKeyDown (KeyCode.M)) {
-			isGuitarEnd = true;
-
-		}
-
 		if ((npcCounter == auxCounter && quantity==-5)){
-			print ("npccounter=" + npcCounter + " auxcounter=" + auxCounter);
+			print ("wer");
 			audios.Stop ();
+			isGuitarEnd = true;
 			isGuitarOn = false;
-			GameObject.Find ("Main Camera").GetComponent<CameraController> ().IsZoom = false;
-		}	
+			quantity = 0;
+		}
+		if (isGuitarEnd) {
+			if (Input.anyKeyDown) {
+				if(!Input.GetKeyDown(KeyCode.Space)){
+					GameObject.Find ("Main Camera").GetComponent<CameraController> ().IsZoom = false;
+					totalEarn.SetActive (false);
+					money.SetActive (false);
+					isGuitarEnd = false;
+				}
+			}
+		}
 	}
 	void FixedUpdate () {
-		PlayGuitar();
+		
 		if(isGuitarEnd) EndMinigame ();
+		else PlayGuitar();
 
     }
 	public void Getlines(){
@@ -70,8 +79,6 @@ public class GuitarMinigame : MonoBehaviour {
 	}
     public void PlayGuitar()
     {
-		//print ("npccounter=" + npcCounter + " auxcounter=" + auxCounter);
-
 		//iNICIALIZAMOS EL CONTADOR DE COMBO
 		if (comboAux >= 1) {
 			goCombo.SetActive (true);
@@ -88,7 +95,8 @@ public class GuitarMinigame : MonoBehaviour {
 			comboTxt2.text = combo.ToString ();
 		}
 		Getlines ();
-		//Impedimos que le hobo se mueva mientra toca la guitarra
+
+		//Impedimos que el hobo se mueva mientra toca la guitarra
 		if (isGuitarOn) {
 			GetComponent<PlayerController> ().IsMovingD = false;
 			GetComponent<PlayerController> ().IsMovingU = false;
@@ -100,8 +108,8 @@ public class GuitarMinigame : MonoBehaviour {
 			audios.Stop();
 
 		}
-        //animacion guitarrista
-        anim.SetBool("guitarOn", isGuitarOn);
+        //animacion guitarrista si no esta activado el final del minijuego
+		if(!isGuitarEnd) anim.SetBool("guitarOn", isGuitarOn);
 
         //si la camara esta enfocada en el guitarrista
 		if (Camera.main.orthographicSize <= 1) {
@@ -114,6 +122,7 @@ public class GuitarMinigame : MonoBehaviour {
 			}
 			//Activamos el sprite de las cuerdas y en cada loop del update tomamos los segundos de la cancion
 			guide [0].SetActive (true);
+			moneyText.SetActive (true);
 			money.SetActive (true);
 			float seconds=0;
 
@@ -158,58 +167,65 @@ public class GuitarMinigame : MonoBehaviour {
 					GeneraNPC();
 				}
 			}
-			if(quantity<=0) {
-				//print ("npccounter 0=" + npcCounter);
-
-			}
-
 		}
         else {
-			auxCounter = 0;
-			guide[0].SetActive (false);
+			isGuitarEnd = false;
+			isSeconds = true;
+			reset = true;
+			audios.Stop ();
 			line.Clear ();
+			repeatPosition.Clear ();
+			rectTrans.localPosition = moneyInitPosition;
+			npcCounter = 6;
+			auxCounter = 0;
+			j = 0;
+			combo = 1;
+			score = 0;
 			quantity = 0;
+			comboAux = 0;
+			comboTxt1.text = "0";
+			comboTxt2.text = "0";
+			moneyText1.text = "0";
+			moneyText2.text = "0";
+			goCombo.SetActive (false);
+			gotextCombo1.SetActive (false);
+			gotextCombo2.SetActive (false);
+			guide[0].SetActive (false);
 			crap.SetActive (false);
 			meh.SetActive (false);
 			good.SetActive (false);
-			j = 0;
-			reset = true;
-			audios.Stop ();
-			isSeconds = true;
+			totalEarn.SetActive (false);
 			money.SetActive (false);
-			combo = 1;
-			score = 0;
-			gotextCombo1.SetActive (false);
-			gotextCombo2.SetActive (false);
-			comboTxt1.text = "0";
-			comboTxt2.text = "0";
-			comboAux = 0;
-			repeatPosition.Clear ();
-			npcCounter = 6;
-
+			moneyText.SetActive (false);
+			anim.SetBool("endGuitar", isGuitarEnd);
+			rectTrans.localScale = new Vector3 ( 0.29f,  0.29f, 1);
+			print ("money=" + money.activeSelf + "totalearn=" + totalEarn.activeSelf);
 		}
-		 
-
-    }
+	}
 
 	private void EndMinigame(){
 		anim.SetBool("endGuitar", isGuitarEnd);
+		goCombo.SetActive (false);
+		money.SetActive (false);
 		totalEarn.SetActive (true);
 		rectTrans.anchoredPosition = new Vector3 (268f, -190f, 0);
-		StartCoroutine (ChangeSize ());
+		ChangeSize ();
+		guide[0].SetActive (false);
+		crap.SetActive (false);
+		meh.SetActive (false);
+		good.SetActive (false);
+		gotextCombo1.SetActive (false);
+		gotextCombo2.SetActive (false);
+
 	}
 
-	private IEnumerator ChangeSize(){
-		while (true) {
-			yield return new WaitForSeconds (1f);
-			print ("corrutina1");
-			rectTrans.localScale = new Vector3 (0.60f, 0.60f, 1);
-			yield return new WaitForSeconds (1f);
-			print ("corrutina1");
-			rectTrans.localScale = new Vector3 (0.29f, 0.29f, 1);
-		}
-		
+	private void ChangeSize(){
+		if (rectTrans.localScale.x >= 0.60f) isBig = true; 
+		if (rectTrans.localScale.x <= 0.29f) isBig = false;
+		if (isBig) rectTrans.localScale = new Vector3 (rectTrans.localScale.x - 0.015f, rectTrans.localScale.y - 0.015f, 1);
+			else rectTrans.localScale = new Vector3 (rectTrans.localScale.x + 0.015f, rectTrans.localScale.y + 0.015f, 1);
 	}
+
 	private void GeneraNPC(){
 		if (npcCounter > 0) {
 			bool found;
@@ -581,6 +597,14 @@ public class GuitarMinigame : MonoBehaviour {
 		}
 		set {
 			score = value;
+		}
+	}
+	public bool IsGuitarEnd {
+		get {
+			return this.isGuitarEnd;
+		}
+		set {
+			isGuitarEnd = value;
 		}
 	}
 }
