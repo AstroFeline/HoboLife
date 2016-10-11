@@ -1,14 +1,13 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Guitar\GuitarMinigame.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\NPC\NPCController.cs">
     <Files>
-      <File FileName="Assets\Scripts\Guitar\GuitarMinigame.cs" Line="54" Column="41" />
       <File FileName="Assets\Scripts\NPC\NpcEspectatorIA.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Guitar\GuitarTrigger.cs" Line="10" Column="8" />
+      <File FileName="Assets\Scripts\Guitar\GuitarTrigger.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Global\CameraController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Dialogue\DialogueHolderController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Player\PlayerController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\NPC\NPCController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\NPC\PidgeonController.cs" Line="63" Column="11" />
+      <File FileName="Assets\Scripts\NPC\NPCController.cs" Line="102" Column="43" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -6,7 +6,8 @@ public class CameraController : MonoBehaviour {
     
     public GameObject target;
     public float distance;
-    private bool isTarget;
+	public bool isTarget;
+
 	private float camOrthographic;
 	private Vector3 camInitPosition;
 	private bool isZoom=false;

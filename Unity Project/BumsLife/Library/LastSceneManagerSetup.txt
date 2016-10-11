@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/Solar.unity
+- path: Assets/Scenes/Square.unity
   isLoaded: 1
   isActive: 1
