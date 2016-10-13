@@ -5,10 +5,13 @@ public class PidgeonController : MonoBehaviour {
 
 	Vector3 initPosition;
 	private Animator anim;
-	bool fly;
+	bool fly, facingR=false, flyBack;
 	SpriteRenderer spriteRend;
-	int rand;
+	int rand,direction;
+	float isWalking=1f;
+
 	void Start () {
+		direction = 3;
 		initPosition = transform.position;
 		anim = GetComponent<Animator>();
 		spriteRend = GetComponent<SpriteRenderer> ();
@@ -27,45 +30,64 @@ public class PidgeonController : MonoBehaviour {
 				break;
 			}
 		} else {
-			anim.SetBool ("fly", true);
-			Fly (rand);
+			anim.SetBool ("fly", fly);
+			Fly ();
 		}
 	}
 
 	public void Move(){
 		anim.SetFloat("speed", 1);
-		int direction = Random.Range (1, 5);
-
-		switch (direction) {
-		case 1: 
-			transform.Translate (Vector3.up* Time.deltaTime*0.1f);
-			break;
-		case 2: 
-			transform.Translate (Vector3.down* Time.deltaTime*0.1f);
-			break;
-		case 3:
-			spriteRend.flipX = false;
-			transform.Translate (Vector3.right* Time.deltaTime*0.1f);
+		if (isWalking >= 0) {
+			switch (direction) {
+			case 1: 
+				transform.Translate (Vector3.up * Time.deltaTime * 0.1f);
 				break;
-		case 4:	
-			spriteRend.flipX = true;
-			transform.Translate (Vector3.left* Time.deltaTime*0.1f);
-			break;
+			case 2: 
+				transform.Translate (Vector3.down * Time.deltaTime * 0.1f);
+				break;
+			case 3:
+				spriteRend.flipX = true;
+				facingR = true;
+				transform.Translate (Vector3.right * Time.deltaTime * 0.1f);
+				break;
+			case 4:	
+				spriteRend.flipX = false;
+				facingR = false;
+				transform.Translate (Vector3.left * Time.deltaTime * 0.1f);
+				break;
+			}
+			isWalking -= Time.deltaTime;
+		} else {
+			direction = Random.Range (1, 5);
+			isWalking = 1f;
 		}
 	}
 
-	public void Fly(int direction){
+	public void Fly(){
 		
-		switch (direction) {
-		case 1: spriteRend.flipX = true;
-				transform.Translate(new Vector3((1f * Time.deltaTime), (1f * Time.deltaTime),0f));	
-				break;
-		case 2:	transform.Translate(new Vector3(-(1f * Time.deltaTime), (1f * Time.deltaTime),0f));
-				break;
+		if (!flyBack) {
+			if (facingR)
+				transform.Translate (new Vector3 ((1f * Time.deltaTime), (1f * Time.deltaTime), 0f));
+			else
+				transform.Translate (new Vector3 (-(1f * Time.deltaTime), (1f * Time.deltaTime), 0f));
+		} else {
+			if (facingR) spriteRend.flipX = false;
+			else spriteRend.flipX = true;
+
+			transform.position = Vector3.MoveTowards (transform.position,initPosition, Time.deltaTime*2);
+			if (transform.position == initPosition) {
+				flyBack = false;
+				fly = false;
+				anim.SetBool ("fly", fly);
+			}
 		}
+		if (transform.position.y > initPosition.y + 2f && flyBack==false) {
+			flyBack = true;
+		}
+
 	}
 
-	public void OnTriggerEnter2D(Collider2D col){
+	public void OnTriggerStay2D(Collider2D col){
 		if (col.tag == "Player") {
 			print ("volar");
 			fly = true;
