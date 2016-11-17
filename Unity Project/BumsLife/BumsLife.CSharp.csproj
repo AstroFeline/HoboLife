@@ -77,6 +77,8 @@
     <Compile Include="Assets\Scripts\NPC\NpcEspectatorIA.cs" />
     <Compile Include="Assets\Scripts\NPC\PidgeonController.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerZoneController.cs" />
+    <Compile Include="Assets\Scripts\Stealth\StealthManagerController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\StreamingAssets\Dialogues\Dialogues.txt" />
